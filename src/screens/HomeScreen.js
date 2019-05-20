@@ -1,10 +1,8 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 
 class HomeScreen extends React.Component {
-  static navigationOptions = {
-
-  };
+  static navigationOptions = {};
 
   render() {
     return (
@@ -18,13 +16,12 @@ class HomeScreen extends React.Component {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center"
   },
   textStyle: {
-    fontSize: 20,
-
+    fontSize: 20
   }
 };
 
