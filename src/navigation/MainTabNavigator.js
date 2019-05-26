@@ -1,13 +1,15 @@
-import React from "react";
-import { Platform } from "react-native";
+import React from 'react';
+import { Platform } from 'react-native';
 import {
   createStackNavigator,
   createBottomTabNavigator
-} from "react-navigation";
+} from 'react-navigation';
 
-import TabBarIcon from "../components/TabBarIcon";
-import HomeScreen from "../screens/HomeScreen";
-import GamesScreen from "../screens/GamesScreen";
+import TabBarIcon from '../components/TabBarIcon';
+import HomeScreen from '../screens/HomeScreen';
+import GamesScreen from '../screens/GamesScreen';
+import MathBoxGame from '../screens/MathBoxGame';
+import CityGuesserScreen from '../screens/CityGuesserScreen';
 //import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -15,29 +17,34 @@ const HomeStack = createStackNavigator({
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: "User",
+  tabBarLabel: 'User',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === "ios"
-          ? `ios-information-circle${focused ? "" : "-outline"}`
-          : "md-information-circle"
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
       }
     />
   )
 };
 
+
 const GamesStack = createStackNavigator({
-  Links: GamesScreen
+  Games: GamesScreen,
+  MathBoxGame: MathBoxGame,
+  CityGuesser: CityGuesserScreen,
+}, {
+  headerMode: 'none'
 });
 
 GamesStack.navigationOptions = {
-  tabBarLabel: "Games",
+  tabBarLabel: 'Games',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-link" : "md-link"}
+      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
     />
   )
 };
