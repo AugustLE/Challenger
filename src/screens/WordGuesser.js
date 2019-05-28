@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, KeyboardAvoidingView } from 'react-native';
 import timer from 'react-native-timer';
+import randomColor from 'randomcolor';
 import GameVars from '../constants/GameVars';
 import GlobalStyles from '../GlobalStyles';
 import CountdownBar from '../components/CountdownBar';
 import { Input, PrimaryButton, SecondaryButton, ErrorText } from '../components/common';
+
 
 String.prototype.replaceAt=function(index, replacement) {
     return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
@@ -30,7 +32,8 @@ const initial_state = {
   time_to_start: gameConfig.time_to_start,
   show_countdown: false,
   user_points: 0,
-  gave_right_answer: false
+  gave_right_answer: false,
+  levelColor: '#d1fffe'
 }
 
 class WordGuesser extends Component {
@@ -46,7 +49,11 @@ class WordGuesser extends Component {
   startLevelCountdown() {
     timer.clearInterval('LevelCountdown');
     timer.clearInterval('GameCountdown');
-    this.setState({ show_countdown: true, game_time_remaining: 20 });
+    let random_color = this.state.levelColor;
+    if (this.state.level_number > 0) {
+      random_color = randomColor({ alpha: 0.3 });
+    }
+    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color });
     this.getRandomWord();
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
   }
@@ -107,11 +114,11 @@ class WordGuesser extends Component {
   }
 
   getMaskedWord(current_word) {
-    if (current_word.length <= 4) {
-      return current_word.replaceAt(1, '_');
-    } else if (current_word.length <= 6) {
+    if (current_word.length <= 5) {
+      return current_word.replaceAt(2, '_');
+    } else if (current_word.length <= 8) {
       let masked_word = current_word.replaceAt(1, '_');
-      masked_word = masked_word.replaceAt(3, '_');
+      masked_word = masked_word.replaceAt(4, '_');
       return masked_word;
     } else {
       let masked_word = current_word.replaceAt(1, '_');
@@ -193,8 +200,15 @@ class WordGuesser extends Component {
 
     }
     return (
+      <KeyboardAvoidingView
+        style={{ width: '100%', flex: 1 }}
+        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+        behavior="padding"
+        enabled
+        >
+
       <View style={styles.container}>
-        <View style={styles.topContainer}>
+        <View style={[styles.topContainer, { backgroundColor: this.state.levelColor }]}>
           <View style={styles.horizontalContainer}>
             <Text style={styles.livesTxt}>❤️ {this.state.lives}</Text>
             <Text style={styles.scoreTxt}>🏅 {this.state.user_points}</Text>
@@ -225,7 +239,8 @@ class WordGuesser extends Component {
           </View>
         </View>
       </View>
-    )
+      </KeyboardAvoidingView>
+    );
   }
 }
 
@@ -234,6 +249,7 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%'
   },
   topContainer: {
     flex: 1,
@@ -271,8 +287,8 @@ const styles = {
   subTitle: {
     fontSize: 25,
     fontFamily: GlobalStyles.fontFamily,
-    color: GlobalStyles.themeColor,
-    fontWeight: '600',
+    //color: GlobalStyles.themeColor,
+    //fontWeight: '600',
     marginTop: 20
   },
   horizontalContainer: {

@@ -41,13 +41,16 @@ class MathBoxGame extends Component {
 
   state = initial_state;
 
-  /*componentDidMount() {
+  componentDidMount() {
     console.log(Dimensions.get('window').width)
-  }*/
+    this.startCountdown();
+  }
 
   startCountdown() {
     timer.setInterval('StartCountdown', this.timeoutStartGame.bind(this), 1000);
+    //const random_color = randomColor({ alpha: 0.3 });
     this.setState({ ...initial_state, ...{ show_countdown: true }});
+
   }
 
   timeoutStartGame() {
@@ -77,7 +80,8 @@ class MathBoxGame extends Component {
     this.setState({ time_to_start: this.state.time_to_start - 1 });
     if (this.state.time_to_start === 0) {
       timer.clearInterval('LevelCountdown');
-      this.setState({ ...initial_state, ...{ game_running: true, show_countdown: false, level_count: this.state.level_count + 1 }});
+      const random_color = randomColor({ alpha: 0.3 });
+      this.setState({ ...initial_state, ...{ game_running: true, show_countdown: false, level_count: this.state.level_count + 1, levelColor: random_color }});
       this.startGameCountdown();
       const next_game_vars = this.levelGenerator(this.state.level_count);
       this.initGameMode(next_game_vars);
@@ -107,7 +111,6 @@ class MathBoxGame extends Component {
     let random_limit_roof = 80;
     let random_limit_bottom = 10;
     let right_answers = 2;
-
     if (lvl >= 1 && lvl <= 2) {
       box_count += lvl;
     } else if (lvl > 2 && lvl < 4) {
@@ -118,13 +121,13 @@ class MathBoxGame extends Component {
       //box_count = lvl;
       right_answers = 2
       box_count = 5;
-      this.setState({ levelColor: '#94ffec' });
+      //this.setState({ levelColor: '#94ffec' });
 
     } else if (lvl >= 9 && lvl < 14) {
       box_count = 6;
       right_answers = 4;
 
-      this.setState({ levelColor: '#ffe194' });
+      //this.setState({ levelColor: '#ffe194' });
     } else if (lvl >= 14 && lvl < 19) {
       box_count = 4;
       right_answers = 2;
@@ -133,7 +136,7 @@ class MathBoxGame extends Component {
       sum_limit_bottom = 50;
       random_limit_roof = 130;
       random_limit_bottom = 40;
-      this.setState({ levelColor: '#f9987a' });
+      //this.setState({ levelColor: '#f9987a' });
 
 
     } else if (lvl >= 19 && lvl < 24) {
@@ -144,7 +147,7 @@ class MathBoxGame extends Component {
       sum_limit_bottom = 50;
       random_limit_roof = 130;
       random_limit_bottom = 40;
-      this.setState({ levelColor: '#ff6060' });
+      //this.setState({ levelColor: '#ff6060' });
     } else {
       box_count = 7;
       right_answers = 2;
@@ -153,7 +156,7 @@ class MathBoxGame extends Component {
       sum_limit_bottom = 50;
       random_limit_roof = 130;
       random_limit_bottom = 40;
-      this.setState({ levelColor: '#80f97a' });
+      //this.setState({ levelColor: '#80f97a' });
     }
 
     return {
@@ -303,7 +306,7 @@ class MathBoxGame extends Component {
     if (this.state.game_over) {
       return (
         <View>
-          <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>Game over :(</Text>
+          <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>❌ Game over :(</Text>
           <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 20, marginTop: 20, marginBottom: 20 }}>You completed {this.state.level_count} levels!</Text>
         </View>
       )
@@ -311,18 +314,12 @@ class MathBoxGame extends Component {
   }
 
   renderStartMenu() {
-    let button_title = 'Start game!';
-    if (this.state.game_over) {
-      button_title = 'Try again!';
-    }
-
-
     if (!this.state.game_running && !this.state.show_countdown) {
       return (
         <View style={styles.container}>
           {this.renderGameOverText()}
           <PrimaryButton onPress={this.startCountdown.bind(this)}>
-            {button_title}
+            Try again!
           </PrimaryButton>
           <SecondaryButton
             onPress={() => this.props.navigation.goBack()}
@@ -337,9 +334,10 @@ class MathBoxGame extends Component {
   renderCountdownText() {
     if (this.state.show_countdown) {
       return (
-        <Text style={styles.countdownText}>
-          {this.state.time_to_start}
-        </Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={[styles.countdownText, { fontSize: 25, marginBottom: 15 }]}>Starting in...</Text>
+          <Text style={styles.countdownText}>{this.state.time_to_start}</Text>
+        </View>
       );
     }
   }
@@ -355,7 +353,7 @@ class MathBoxGame extends Component {
     if (this.state.level_won) {
       return (
         <View style={styles.container}>
-          <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>Level {this.state.level_count + 1} complete!</Text>
+          <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>Level {this.state.level_count + 1} complete 👍</Text>
           <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 20, marginTop: 20, marginBottom: 20 }}>Next level starting in...</Text>
           <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>{this.state.time_to_start}</Text>
         </View>
@@ -405,7 +403,7 @@ const styles = {
     fontSize: 30
   },
   topContainer: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 30,
@@ -416,7 +414,7 @@ const styles = {
     elevation: 2,
   },
   bottomContainer: {
-    flex: 3,
+    flex: 5,
     justifyContent: 'center',
     alignItems: 'center'
   },

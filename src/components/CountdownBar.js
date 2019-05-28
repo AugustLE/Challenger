@@ -8,7 +8,7 @@ const CountdownBar = (props) => {
   };
 
   return (
-    <View style={[styles.container, { width: barWidth() }]}>
+    <View style={[styles.container, { width: barWidth() }, props.style]}>
       <Text style={styles.textStyle}>{props.time_left}</Text>
     </View>
   );
