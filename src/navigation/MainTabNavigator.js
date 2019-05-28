@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import GamesScreen from '../screens/GamesScreen';
 import MathBoxGame from '../screens/MathBoxGame';
 import CityGuesserScreen from '../screens/CityGuesserScreen';
+import WordGuesser from '../screens/WordGuesser';
 //import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -35,6 +36,7 @@ const GamesStack = createStackNavigator({
   Games: GamesScreen,
   MathBoxGame: MathBoxGame,
   CityGuesser: CityGuesserScreen,
+  WordGuesser: WordGuesser
 }, {
   headerMode: 'none'
 });

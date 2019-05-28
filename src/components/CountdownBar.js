@@ -24,7 +24,7 @@ const styles = {
   },
   textStyle: {
     fontFamily: GlobalStyles.fontFamily,
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: '600',
     color: 'white'
   }

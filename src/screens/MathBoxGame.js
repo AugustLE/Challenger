@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, LayoutAnimation } from 'react-native';
+import { View, Text, TouchableOpacity, LayoutAnimation, Dimensions } from 'react-native';
 import timer from 'react-native-timer';
 import randomColor from 'randomcolor';
 import { PrimaryButton, SecondaryButton } from '../components/common';
@@ -41,13 +41,62 @@ class MathBoxGame extends Component {
 
   state = initial_state;
 
+  /*componentDidMount() {
+    console.log(Dimensions.get('window').width)
+  }*/
+
   startCountdown() {
     timer.setInterval('StartCountdown', this.timeoutStartGame.bind(this), 1000);
     this.setState({ ...initial_state, ...{ show_countdown: true }});
   }
 
+  timeoutStartGame() {
+    this.setState({ time_to_start: this.state.time_to_start - 1 });
+    if (this.state.time_to_start === 0) {
+      timer.clearInterval('StartCountdown');
+      this.setState({ game_running: true, show_countdown: false });
+      this.startGameCountdown();
+      const initial_game_vars = {
+        box_count: 2,
+        sum_limit_roof: 100,
+        sum_limit_bottom: 30,
+        random_limit_roof: 80,
+        random_limit_bottom: 10,
+        right_answers: 1
+      }
+      this.initGameMode(initial_game_vars);
+    }
+  }
+
   startLevelCountdown() {
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
+  }
+
+
+  timeoutNextLevel() {
+    this.setState({ time_to_start: this.state.time_to_start - 1 });
+    if (this.state.time_to_start === 0) {
+      timer.clearInterval('LevelCountdown');
+      this.setState({ ...initial_state, ...{ game_running: true, show_countdown: false, level_count: this.state.level_count + 1 }});
+      this.startGameCountdown();
+      const next_game_vars = this.levelGenerator(this.state.level_count);
+      this.initGameMode(next_game_vars);
+    }
+  }
+
+
+  startGameCountdown() {
+
+    this.setState({ time_to_start: gameConfig.time_to_start });
+    timer.setInterval('GameCountdown', this.secIntervalGame.bind(this), 1000);
+  }
+
+  secIntervalGame() {
+    this.setState({ game_time_remaining: this.state.game_time_remaining - 1 });
+    if (this.state.game_time_remaining === 0) {
+      timer.clearInterval('GameCountdown');
+      this.setState({ game_over: true, game_running: false });
+    }
   }
 
   levelGenerator(lvl) {
@@ -116,50 +165,6 @@ class MathBoxGame extends Component {
       right_answers: right_answers
     }
   }
-
-  timeoutNextLevel() {
-    this.setState({ time_to_start: this.state.time_to_start - 1 });
-    if (this.state.time_to_start === 0) {
-      timer.clearInterval('LevelCountdown');
-      this.setState({ ...initial_state, ...{ game_running: true, show_countdown: false, level_count: this.state.level_count + 1 }});
-      this.startGameCountdown();
-      const next_game_vars = this.levelGenerator(this.state.level_count);
-      this.initGameMode(next_game_vars);
-    }
-  }
-
-  timeoutStartGame() {
-    this.setState({ time_to_start: this.state.time_to_start - 1 });
-    if (this.state.time_to_start === 0) {
-      timer.clearInterval('StartCountdown');
-      this.setState({ game_running: true, show_countdown: false });
-      this.startGameCountdown();
-      const initial_game_vars = {
-        box_count: 2,
-        sum_limit_roof: 100,
-        sum_limit_bottom: 30,
-        random_limit_roof: 80,
-        random_limit_bottom: 10,
-        right_answers: 1
-      }
-      this.initGameMode(initial_game_vars);
-    }
-  }
-
-  startGameCountdown() {
-
-    this.setState({ time_to_start: gameConfig.time_to_start });
-    timer.setInterval('GameCountdown', this.secIntervalGame.bind(this), 1000);
-  }
-
-  secIntervalGame() {
-    this.setState({ game_time_remaining: this.state.game_time_remaining - 1 });
-    if (this.state.game_time_remaining === 0) {
-      timer.clearInterval('GameCountdown');
-      this.setState({ game_over: true, game_running: false });
-    }
-  }
-
 
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -420,7 +425,8 @@ const styles = {
     fontWeight: '600',
     fontFamily: GlobalStyles.fontFamily,
     textAlign: 'center',
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: 10
   },
   lvlText: {
     fontSize: 30,

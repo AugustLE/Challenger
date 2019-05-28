@@ -20,6 +20,11 @@ class GamesScreen extends React.Component {
           onPress={() => this.props.navigation.navigate('MathBoxGame')}>
           MathGame
         </PrimaryButton>
+        <PrimaryButton
+          style={{ marginTop: 10 }}
+          onPress={() => this.props.navigation.navigate('WordGuesser')}>
+          WordGuesser
+        </PrimaryButton>
       </View>
     );
   }
