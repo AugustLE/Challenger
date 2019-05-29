@@ -2,7 +2,7 @@ import {
   USER_SET_FIELD,
 } from './types';
 
-import { auth, fsRef ,db} from "../../firebase";
+import { auth, fsRef } from "../../firebase";
 
 export const setUserField = ({ prop, value }) => {
   return {
@@ -31,6 +31,10 @@ export const setUserField = ({ prop, value }) => {
   };
 };*/
 
+//http://clipart-library.com/images/zcX5a56qi.jpg
+
+
+
 export const loginUser = (email, password) => dispatch => {
   return auth
     .signInWithEmailAndPassword(email, password);
@@ -51,14 +55,6 @@ export const createUser = (email, password) => dispatch => {
           uid: auth.currentUser.uid,
         });
         console.log("placed in firestore");
-    })
-    .then(() => {
-      db.ref("users/"+auth.currentUser.uid)
-        .set({
-          email: email,
-          uid: auth.currentUser.uid,
-        });
-        console.log("placed in databse");
     })
     .catch(error => {
       console.log("ERRRRRRRRROR", error);
