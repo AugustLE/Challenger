@@ -20,33 +20,60 @@ class CityGuesserScreen extends React.Component {
       cities: ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L\'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
       items: [],
       imageURL:null,
-      prevCities:[]
+      prevCities:[],
+      loading: false,
+      answersList:[],
+      started:false
     };
   }
 /*
   var country_list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
 */
   componentDidMount() {
-    console.log("CityGuess");
+    console.log("Starting Country Guesser");
     this.initializeGame();
   }
 
   initializeGame = () => {
+    var numberOfRounds = 4;
     this.setState({
       score: 0,
+      numberOfRounds:numberOfRounds,
       roundNumber:0,
       currentCity: "",
       currentAlternatives: [],
       cities: ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L\'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
       items: [],
       imageURL:null,
-      prevCities:[]
+      prevCities:[],
+      loading:true,
+      answersList:[],
+      started:false,
     });
-    this.newRound();
+    this.generateQuestions(numberOfRounds);
+  };
+
+
+  generateQuestions = (numberOfRounds) =>{
+    var quest = [];
+    while (quest.length < numberOfRounds+1){
+      console.log("Quest iteration");
+      var altArr = [];
+      while(altArr.length < 4){
+        var r = Math.floor(Math.random(0,this.state.cities.length)*100) + 1;
+        if(altArr.indexOf(r) === -1) altArr.push(r);
+      }
+      quest.push(altArr);
+    }
+    this.setState({
+      answersList:quest,
+      loading:false
+    });
   };
 
   submitAnswer = submittedAnswer => {
-    console.log(submittedAnswer);
+    var rNumb=this.state.roundNumber;
+    console.log("Answered: "+submittedAnswer);
     if (submittedAnswer===this.state.currentCity){
       this.setState({
         score:this.state.score+1
@@ -56,56 +83,50 @@ class CityGuesserScreen extends React.Component {
     else{
       console.log("wrong");
     }
-    this.setState({
-      roundNumber:this.state.roundNumber+1
-    })
-    this.newRound();
 
+    if (rNumb===this.state.numberOfRounds){
+      console.log("Game done");
+      this.props.navigation.navigate("Main");
+    }
+    else{
+      this.setState({
+        roundNumber:rNumb+1
+      })
+      this.newRound(rNumb+1);
+    }
   };
 
   newGame = () => {
+    this.setState({
+      started:false
+    });
     this.initializeGame();
   };
 
-  newRound = () =>{
-
+  startGame = () =>{
+    console.log("STARTING GAME");
     this.setState({
-      prevCities: this.state.prevCities.push(this.state.currentCity)
+      started:true,
     });
-    console.log(this.state.prevCities.length);
-    console.log(this.state.prevCities);
-    if (this.state.roundNumber===2) {
-      console.log("Game done");
-      this.initializeGame();
-    }
-    else{
-      console.log("new round");
-      console.log(this.state.cities.length);
-      var altArray = [];
+    this.newRound(0);
+  };
 
-      while(altArray.length < 4){
-        console.log("iteration");
-        console.log(altArray);
-        var r = Math.floor(Math.random(0,this.state.cities.length)*100) + 1;
-        if(altArray.indexOf(r) === -1) altArray.push(r);
+  newRound = (round) =>{
+    console.log("Roundnumber: "+this.state.roundNumber);
 
-      }
+    console.log("new round");
+    console.log(this.state.answersList);
+    var altArray = this.state.answersList[round]
 
-      var current = Math.floor(Math.random() * Math.floor(4));
-      var currentCity = this.state.cities[altArray[current]];
-      var alternatives = [this.state.cities[altArray[0]],this.state.cities[altArray[1]],this.state.cities[altArray[2]],this.state.cities[altArray[3]]];
-      var newPrevCitiesArray = this.state.prevCities.concat(currentCity);
-      this.setState({
-        currentCity:currentCity,
-        currentAlternatives: alternatives,
-        prevCities: newPrevCitiesArray
-      });
-      console.log("Alternatives "+alternatives);
-      console.log("CurrentCity "+currentCity);
-      console.log("PrevCities "+ newPrevCitiesArray);
-      this.getImageByCity(currentCity);
-
-    }
+    var current = Math.floor(Math.random() * Math.floor(4));
+    var currentCity = this.state.cities[altArray[current]];
+    var alternatives = [this.state.cities[altArray[0]],this.state.cities[altArray[1]],this.state.cities[altArray[2]],this.state.cities[altArray[3]]];
+    var newPrevCitiesArray = this.state.prevCities.concat(currentCity);
+    this.setState({
+      currentCity:currentCity,
+      currentAlternatives: alternatives
+    });
+    this.getImageByCity(currentCity);
 
   };
 
@@ -150,39 +171,49 @@ getImageByCity = (city)=>{
         :
       null}
 
-        {this.state.currentAlternatives.length > 0 ? <View>
-          <View style={{ flexDirection: "row" }}>
-          <PrimaryButton
-            style={styles.button}
-            onPress={() => this.submitAnswer(this.state.currentAlternatives[0])}>
-            {this.state.currentAlternatives[0]}
-          </PrimaryButton>
-          <PrimaryButton
-            style={styles.button}
-            onPress={() => this.submitAnswer(this.state.currentAlternatives[1])}>
-            {this.state.currentAlternatives[1]}
-          </PrimaryButton>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-          <PrimaryButton
-            style={styles.button}
-            onPress={() => this.submitAnswer(this.state.currentAlternatives[2])}>
-            {this.state.currentAlternatives[2]}
-          </PrimaryButton><PrimaryButton
-            style={styles.button}
-            onPress={() => this.submitAnswer(this.state.currentAlternatives[3])}>
-            {this.state.currentAlternatives[3]}
-          </PrimaryButton>
-          </View>
-          </View>:null}
+        {!this.state.loading ? null:<View>Loading</View>}
 
-        <View style={{ flexDirection: "row" }}>
-          <Button
-            onPress={() => this.props.navigation.navigate("Main")}
-            title="Back"
-          />
-          <Button onPress={() => this.newGame} title="New Game" />
-        </View>
+
+
+        {this.state.started?
+          <View>
+          <View>
+            <View style={{ flexDirection: "row" }}>
+            <PrimaryButton
+              style={styles.button}
+              onPress={() => this.submitAnswer(this.state.currentAlternatives[0])}>
+              {this.state.currentAlternatives[0]}
+            </PrimaryButton>
+            <PrimaryButton
+              style={styles.button}
+              onPress={() => this.submitAnswer(this.state.currentAlternatives[1])}>
+              {this.state.currentAlternatives[1]}
+            </PrimaryButton>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+            <PrimaryButton
+              style={styles.button}
+              onPress={() => this.submitAnswer(this.state.currentAlternatives[2])}>
+              {this.state.currentAlternatives[2]}
+            </PrimaryButton><PrimaryButton
+              style={styles.button}
+              onPress={() => this.submitAnswer(this.state.currentAlternatives[3])}>
+              {this.state.currentAlternatives[3]}
+            </PrimaryButton>
+            </View>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Button
+                onPress={() => this.props.navigation.navigate("Games")}
+                title="Back"
+              />
+              <Button onPress={() => this.newGame()} title="New Game" />
+            </View>
+            </View>
+          :
+        <Button onPress={() => this.startGame()} title="Start Game" />}
+
 
 
       </View>
