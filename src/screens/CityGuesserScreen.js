@@ -1,9 +1,35 @@
 import React from "react";
-import { TouchableOpacity,ScrollView, View, Text, Button, Image } from "react-native";
+import { TouchableOpacity,ScrollView, View, Text, Button, Image,KeyboardAvoidingView } from "react-native";
 import axios from 'axios';
-import imageSearch from "react-native-google-image-search";
-import { PrimaryButton } from '../components/common';
+import timer from 'react-native-timer';
+import randomColor from 'randomcolor';
+import { PrimaryButton, SecondaryButton, ErrorText } from '../components/common';
+import GameVars from '../constants/GameVars';
+import CountdownBar from '../components/CountdownBar';
+import GlobalStyles from '../GlobalStyles';
 
+
+
+const initial_state = {
+  score: 0,
+  roundNumber:0,
+  currentCity: "",
+  currentAlternatives: [],
+  cities: GameVars.countries,
+  imageURL:null,
+  loading: false,
+  answersList:[],
+  started:false,
+  lives: 3,
+  timePerLevel: 10,
+  timeLevelRemaining: 10,
+  gameOver: false,
+  levelColor: '#d1fffe',
+  timeStart: 3,
+  showCountdown: false,
+  gaveRightAnswer: false,
+
+}
 
 class CityGuesserScreen extends React.Component {
   static navigationOptions = {
@@ -12,19 +38,7 @@ class CityGuesserScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      score: 0,
-      roundNumber:0,
-      currentCity: "",
-      currentAlternatives: [],
-      cities: ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L\'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
-      items: [],
-      imageURL:null,
-      prevCities:[],
-      loading: false,
-      answersList:[],
-      started:false
-    };
+    this.state = initial_state;
   }
 /*
   var country_list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
@@ -36,28 +50,73 @@ class CityGuesserScreen extends React.Component {
 
   initializeGame = () => {
     var numberOfRounds = 4;
-    this.setState({
-      score: 0,
-      numberOfRounds:numberOfRounds,
-      roundNumber:0,
-      currentCity: "",
-      currentAlternatives: [],
-      cities: ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L\'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
-      items: [],
-      imageURL:null,
-      prevCities:[],
-      loading:true,
-      answersList:[],
-      started:false,
-    });
-    this.generateQuestions(numberOfRounds);
+    this.setState(
+      initial_state,
+      );
+    //this.generateQuestions(numberOfRounds);
   };
 
+  startLevelCountdown() {
+    timer.clearInterval('LevelCountdown');
+    timer.clearInterval('GameCountdown');
+    let random_color = this.state.levelColor;
+    if (this.state.roundNumber > 0) {
+      random_color = randomColor({ alpha: 0.3 });
+    }
+    this.setState({ showCountdown: true, timeLevelRemaining: 20, levelColor: random_color });
+    this.newRound();
+    timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
+  }
+
+  timeoutNextLevel() {
+    this.setState({ timeStart: this.state.timeStart - 1 });
+    if (this.state.timeStart === 0) {
+      timer.clearInterval('LevelCountdown');
+
+      this.setState({
+        showCountdown: false,
+        roundNumber: this.state.roundNumber + 1
+        ,gave_right_answer: false
+      });
+      this.startGameCountdown();
+    }
+  }
+
+  startGameCountdown() {
+
+    this.setState({ timeStart: this.state.timeStart, showCountdown: false });
+    timer.setInterval('GameCountdown', this.secIntervalGame.bind(this), 1000);
+  }
+
+  startNew() {
+    this.setState(initial_state);
+    this.startLevelCountdown();
+  }
+
+
+  secIntervalGame() {
+    this.setState({ timeLevelRemaining: this.state.timeLevelRemaining - 1 });
+    if (this.state.timeLevelRemaining === 0) {
+      const { lives } = this.state;
+
+      if (lives === 1) {
+        this.setState({
+          game_over: true,
+          lives: 3,
+        });
+      } else {
+        this.setState({ lives: lives - 1 });
+        this.startLevelCountdown();
+      }
+      timer.clearInterval('GameCountdown');
+
+      //this.setState({ game_over: true, game_running: false });
+    }
+  }
 
   generateQuestions = (numberOfRounds) =>{
     var quest = [];
     while (quest.length < numberOfRounds+1){
-      console.log("Quest iteration");
       var altArr = [];
       while(altArr.length < 4){
         var r = Math.floor(Math.random(0,this.state.cities.length)*100) + 1;
@@ -76,24 +135,34 @@ class CityGuesserScreen extends React.Component {
     console.log("Answered: "+submittedAnswer);
     if (submittedAnswer===this.state.currentCity){
       this.setState({
-        score:this.state.score+1
+        score:this.state.score+1,
+        gaveRightAnswer: true
       })
-      console.log("correct");
+      this.startLevelCountdown();
     }
     else{
-      console.log("wrong");
-    }
 
-    if (rNumb===this.state.numberOfRounds){
+      if (this.state.lives===1){
+        this.setState({gameOver: true, lives: 3, gaveRightAnswer: false});
+      }else{
+        this.setState({
+          lives: this.state.lives-1,gaveRightAnswer:false
+        });
+        this.startLevelCountdown();
+      }
+
+    }
+{/*
+    if (this.state.gameOver){
       console.log("Game done");
-      this.props.navigation.navigate("Main");
+      this.props.navigation.navigate("Games");
     }
     else{
       this.setState({
         roundNumber:rNumb+1
       })
       this.newRound(rNumb+1);
-    }
+    }*/}
   };
 
   newGame = () => {
@@ -104,24 +173,23 @@ class CityGuesserScreen extends React.Component {
   };
 
   startGame = () =>{
-    console.log("STARTING GAME");
     this.setState({
       started:true,
     });
-    this.newRound(0);
+    this.startNew();
   };
 
-  newRound = (round) =>{
-    console.log("Roundnumber: "+this.state.roundNumber);
+  newRound = () =>{
+    var altArray = [];
+    while(altArray.length < 4){
+      var r = Math.floor(Math.random(0,this.state.cities.length)*100) + 1;
+      if(altArray.indexOf(r) === -1) altArray.push(r);
+    }
 
-    console.log("new round");
-    console.log(this.state.answersList);
-    var altArray = this.state.answersList[round]
-
+    //var altArray = this.state.answersList[round]
     var current = Math.floor(Math.random() * Math.floor(4));
     var currentCity = this.state.cities[altArray[current]];
     var alternatives = [this.state.cities[altArray[0]],this.state.cities[altArray[1]],this.state.cities[altArray[2]],this.state.cities[altArray[3]]];
-    var newPrevCitiesArray = this.state.prevCities.concat(currentCity);
     this.setState({
       currentCity:currentCity,
       currentAlternatives: alternatives
@@ -155,11 +223,38 @@ getImageByCity = (city)=>{
 
 
   render() {
+    if (this.state.gameOver) {
+      return (
+        <View style={styles.container}>
+          <Text style={[styles.levelOverText, { fontSize: 42 }]}>GAME OVER :(</Text>
+          <Text style={[styles.levelOverText, { fontSize: 30, marginTop: 20 }]}>You got {this.state.score} points 🏅</Text>
+          <PrimaryButton style={{ marginTop: 20 }} onPress={this.startNew.bind(this)}>
+            Try again
+          </PrimaryButton>
+          <SecondaryButton
+            onPress={() => this.props.navigation.goBack()}
+            style={{ marginTop: 10 }}>
+            Go back
+          </SecondaryButton>
+        </View>
+      );
+    }
     return (
+      <KeyboardAvoidingView
+        style={{ width: '100%', flex: 1 }}
+        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+        behavior="padding"
+        enabled
+        >
       <View style={styles.container}>
-        <Text style={{ top: -180, right: -120 }}>
-          Score: {this.state.score}
-        </Text>
+        <View style={[styles.topContainer, { backgroundColor: this.state.levelColor }]}>
+          <View style={styles.horizontalContainer}>
+            <Text style={styles.livesTxt}>❤️ {this.state.lives}</Text>
+            <Text style={styles.scoreTxt}>🏅 {this.state.score}</Text>
+          </View>
+          <Text style={styles.levelText}>Level {this.state.roundNumber}</Text>
+          <CountdownBar max_time={this.state.timePerLevel} time_left={this.state.timeLevelRemaining} />
+        </View>
         {this.state.imageURL!=null?
           <Image
             style={styles.imageContainer}
@@ -195,7 +290,8 @@ getImageByCity = (city)=>{
               style={styles.button}
               onPress={() => this.submitAnswer(this.state.currentAlternatives[2])}>
               {this.state.currentAlternatives[2]}
-            </PrimaryButton><PrimaryButton
+            </PrimaryButton>
+            <PrimaryButton
               style={styles.button}
               onPress={() => this.submitAnswer(this.state.currentAlternatives[3])}>
               {this.state.currentAlternatives[3]}
@@ -205,7 +301,7 @@ getImageByCity = (city)=>{
 
             <View style={{ flexDirection: "row" }}>
               <Button
-                onPress={() => this.props.navigation.navigate("Games")}
+                onPress={() => this.props.navigation.goBack()}
                 title="Back"
               />
               <Button onPress={() => this.newGame()} title="New Game" />
@@ -217,6 +313,7 @@ getImageByCity = (city)=>{
 
 
       </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -224,21 +321,72 @@ getImageByCity = (city)=>{
 const styles = {
   container: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: "#fff",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    width: '100%'
+  },
+  topContainer: {
+    flex: 1,
+    backgroundColor: '#b4ffe8',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    elevation: 2,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 30
   },
   imageContainer: {
     borderWidth: 1,
     width: 300,
     height: 300
   },
-  button: {
-    borderWidth: 2,
-    width: 100,
-    height: 40,
-    margin: 10
+  bottomContainer: {
+    flex: 3,
+    width: '100%',
+    alignItems: 'center'
+  },
+  horizontalContainer: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 10,
+    width: '100%'
+  },
+  levelText: {
+    fontSize: 30,
+    fontFamily: GlobalStyles.fontFamily,
+    fontWeight: '600',
+    marginTop: 10,
+    marginBottom: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    elevation: 2,
+  },
+  livesTxt: {
+    fontFamily: GlobalStyles.fontFamily,
+    fontSize: 18,
+    position: 'absolute',
+    top: -5,
+    left: 10,
+    fontWeight: '600'
+  },
+  scoreTxt: {
+    fontFamily: GlobalStyles.fontFamily,
+    fontSize: 18,
+    position: 'absolute',
+    top: -5,
+    right: 10,
+    fontWeight: '600'
+  },
+  bottomPart: {
+    flex: 1,
+    alignItems: 'center',
+    width: '100%'
+  },
+  levelOverText: {
+    fontSize: 25,
+    fontFamily: GlobalStyles.fontFamily,
+    textAlign: 'center'
   }
 };
 

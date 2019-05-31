@@ -1,6 +1,7 @@
 import {
   USER_SET_FIELD,
   USER_LOGOUT,
+  HIGHSCORES
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -14,6 +15,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, [action.payload.prop]: action.payload.value };
     case USER_LOGOUT:
       return INITIAL_STATE;
+    case HIGHSCORES:
+      return {...state,highscores:action.payload};
     default:
       return state;
   }

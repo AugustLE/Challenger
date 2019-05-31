@@ -1,6 +1,5 @@
 const GlobalVars = {
-  api_url: '',
-  
+  api_url: ''
 };
 
 export default GlobalVars;

@@ -1,14 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   createAppContainer,
   createSwitchNavigator,
   createStackNavigator
-} from "react-navigation";
+} from 'react-navigation';
 
-import MainTabNavigator from "./MainTabNavigator";
-import Login from "../screens/Login";
-import Register from "../screens/Register";
-import CityGuesserScreen from "../screens/CityGuesserScreen";
+import MainTabNavigator from './MainTabNavigator';
+import Login from '../screens/Login';
+import Register from '../screens/Register';
 
 const startNavigator = createStackNavigator(
   {
@@ -16,7 +15,7 @@ const startNavigator = createStackNavigator(
     Register: Register
   },
   {
-    headerMode: "none"
+    headerMode: 'none'
   }
 );
 
@@ -25,7 +24,6 @@ export default createAppContainer(
     // You could add another route here for authentication.
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     Start: startNavigator,
-    Main: MainTabNavigator,
-    CityGuesser: CityGuesserScreen
+    Main: MainTabNavigator
   })
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { PrimaryButton } from '../components/common';
 import { setUserField, logoutUser } from '../actions';
 import { connect } from 'react-redux';
@@ -18,6 +18,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+      <Text style={styles.textStyle}>HOME</Text>
       <PrimaryButton
         style={{ width: '90%', marginTop: 15, borderRadius: 2 }}
         onPress={this.handleLogout.bind(this)}>
@@ -39,6 +40,7 @@ const styles = {
     fontSize: 20
   }
 };
+
 
 const mapStateToProps = (state) => {
   const {  } = state;

@@ -11,6 +11,40 @@ export const setUserField = ({ prop, value }) => {
   };
 };
 
+export const updateHighscore = (game,score) => dispatch =>{
+  let old_score = 0;
+  const ref = fsRef.collection(game).where('email','==',auth.currentUser.email);
+  ref.get().then(querySnapshot => {
+      querySnapshot.forEach(data => {
+        old_score = data.data().score;
+      });
+    });
+    if (score > old_score ){
+      console.log("set highscore");
+      fsRef.collection(game).doc(auth.currentUser.email).set({
+        email:auth.currentUser.email,
+        score:score,
+      });
+    }
+};
+
+export const getHighscores = (game) => dispatch => {
+  let highscores = [];
+  return fsRef
+  .collection(game)
+  .orderBy('score','asc')
+  .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(data => {
+        highscores.push(data.data());
+      });
+    });
+  dispatch({
+    type: "USERS",
+    payload: users
+  });
+};
+
 /*export const userFetch = (token) => {
   const url = GlobalVars.api_url + '/user/details/';
   return (dispatch) => {
