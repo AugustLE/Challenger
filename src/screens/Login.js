@@ -37,7 +37,7 @@ class Login extends Component {
 
     auth.onAuthStateChanged((user) => {
         if (user != null) {
-          this.props.navigation.navigate('CityGuesser');
+          this.props.navigation.navigate('Main');
           }
         }
       );
