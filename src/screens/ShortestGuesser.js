@@ -234,8 +234,11 @@ class ShortestGuesser extends Component {
           <CountdownBar max_time={this.state.game_time_lvl} time_left={this.state.game_time_remaining} />
         </View>
         <View style={styles.bottomContainer}>
-          <View style={[styles.bottomPart, { flex: 2 }]}>
-            <Text style={styles.subTitle}>Guess the shortest:</Text>
+          <View style={styles.titleContainer}>
+          <Text style={styles.subTitle}>Guess the shortest:</Text>
+          </View>
+          <View style={styles.bottomPart}>
+
             <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={[styles.lineBox,{width:this.state.current_alternatives[0], backgroundColor:this.state.levelColor}]}
@@ -285,16 +288,23 @@ const styles = {
     alignItems: 'center',
     paddingTop: 30
   },
+  titleContainer:{
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   bottomContainer: {
     flex: 3,
     //backgroundColor: 'white',
     width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   lineBox:{
     backgroundColor: 'black',
     height: 25,
     margin: 25,
+    marginTop: 50,
   },
   levelText: {
     fontSize: 30,
@@ -351,7 +361,7 @@ const styles = {
     fontWeight: '600'
   },
   bottomPart: {
-    flex: 1,
+    marginTop:30,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%'
