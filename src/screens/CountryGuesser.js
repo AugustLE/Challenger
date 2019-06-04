@@ -48,7 +48,7 @@ class CountryGuesser extends Component {
   componentDidMount() {
     //this.setState({ words: GameVars.words });
     ///this.startGameCountdown();
-    this.startLevelCountdown();
+    //this.startLevelCountdown();
   }
 
   startLevelCountdown() {
@@ -58,7 +58,7 @@ class CountryGuesser extends Component {
     if (this.state.level_number > 0) {
       random_color = randomColor({ alpha: 0.3 });
     }
-    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color });
+    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color, game_running: true });
     this.generateAlernatives();
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
   }
@@ -80,7 +80,7 @@ class CountryGuesser extends Component {
 
   startGameCountdown() {
 
-    this.setState({ time_to_start: gameConfig.time_to_start, show_countdown: false });
+    this.setState({ time_to_start: gameConfig.time_to_start, show_countdown: false, game_running: true });
     timer.setInterval('GameCountdown', this.secIntervalGame.bind(this), 1000);
   }
 
@@ -165,7 +165,7 @@ class CountryGuesser extends Component {
 
   gameOver(){
     this.props.updateHighscore('country_guesser',this.state.user_points)
-    this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false });
+    this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false, game_running: false });
 
   }
 
@@ -184,23 +184,45 @@ class CountryGuesser extends Component {
     }
   }
 
+  renderStartMenu(button_title) {
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <PrimaryButton style={{ marginTop: 20 }} onPress={this.startNew.bind(this)}>
+          {button_title}
+        </PrimaryButton>
+        <SecondaryButton
+          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'country' })}
+          style={{ marginTop: 10 }}>
+          Highscore
+        </SecondaryButton>
+        <SecondaryButton
+          onPress={() => this.props.navigation.goBack()}
+          style={{ marginTop: 10 }}>
+          Go back
+        </SecondaryButton>
+      </View>
+    );
+  }
+
   render() {
     if (this.state.game_over) {
       return (
         <View style={styles.container}>
           <Text style={[styles.levelOverText, { fontSize: 42 }]}>GAME OVER :(</Text>
           <Text style={[styles.levelOverText, { fontSize: 30, marginTop: 20 }]}>You got {this.state.user_points} points 🏅</Text>
-          <PrimaryButton style={{ marginTop: 20 }} onPress={this.startNew.bind(this)}>
-            Try again
-          </PrimaryButton>
-          <SecondaryButton
-            onPress={() => this.props.navigation.goBack()}
-            style={{ marginTop: 10 }}>
-            Go back
-          </SecondaryButton>
+          {this.renderStartMenu('Try again!')}
         </View>
       );
     }
+
+    if (!this.state.game_running && !this.state.show_countdown) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}>
+          {this.renderStartMenu('Start game!')}
+        </View>
+      );
+    }
+
     if (this.state.show_countdown) {
       if (this.state.level_number > 0) {
         let lvl_text = 'You completed level ' + this.state.level_number + ' ✅';
@@ -225,14 +247,8 @@ class CountryGuesser extends Component {
 
     }
     return (
-      <KeyboardAvoidingView
-        style={{ width: '100%', flex: 1 }}
-        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-        behavior="padding"
-        enabled
-        >
-
       <View style={styles.container}>
+
         <View style={[styles.topContainer, { backgroundColor: this.state.levelColor }]}>
           <View style={styles.horizontalContainer}>
             <Text style={styles.livesTxt}>❤️ {this.state.lives}</Text>
@@ -242,44 +258,50 @@ class CountryGuesser extends Component {
           <CountdownBar max_time={this.state.game_time_lvl} time_left={this.state.game_time_remaining} />
         </View>
         <View style={styles.bottomContainer}>
-          <View style={styles.bottomPart}>
+          <View style={[styles.bottomPart, { flex: 2 }]}>
             <Text style={styles.subTitle}>Guess the flag:</Text>
-            {this.state.image_URL!=null?
-              <Image
-                style={styles.imageContainer}
-                source={{
-                  uri:
-                    this.state.image_URL
-                }}
-              />
-            :
-          null}
+            <View style={styles.imageContainer}>
+              {this.state.image_URL!=null?
+                <Image
+                  resizeMode='contain'
+                  style={styles.imageStyle}
+                  source={{
+                    uri:
+                      this.state.image_URL
+                  }}
+                />
+                :
+              null}
+            </View>
           </View>
-          <View style={[styles.bottomPart, { backgroundColor: '#f6f5f5' }]}>
+          <View style={[styles.bottomPart, { backgroundColor: '#f6f5f5', flex: 1 }]}>
             <View style={{ flexDirection: "row" }}>
-            <PrimaryButton
+            <SecondaryButton
+              style={styles.altButton}
               onPress={() => this.giveAnswer(this.state.current_alternatives[0])}>
               {this.state.current_alternatives[0]}
-            </PrimaryButton>
-            <PrimaryButton
+            </SecondaryButton>
+            <SecondaryButton
+              style={styles.altButton}
               onPress={() => this.giveAnswer(this.state.current_alternatives[1])}>
               {this.state.current_alternatives[1]}
-            </PrimaryButton>
+            </SecondaryButton>
             </View>
             <View style={{ flexDirection: "row" }}>
-            <PrimaryButton
+            <SecondaryButton
+              style={styles.altButton}
               onPress={() => this.giveAnswer(this.state.current_alternatives[2])}>
               {this.state.current_alternatives[2]}
-            </PrimaryButton>
-            <PrimaryButton
+            </SecondaryButton>
+            <SecondaryButton
+              style={styles.altButton}
               onPress={() => this.giveAnswer(this.state.current_alternatives[3])}>
               {this.state.current_alternatives[3]}
-            </PrimaryButton>
+            </SecondaryButton>
             </View>
           </View>
         </View>
       </View>
-      </KeyboardAvoidingView>
     );
   }
 }
@@ -303,9 +325,20 @@ const styles = {
     paddingTop: 30
   },
   imageContainer: {
-    borderWidth: 1,
-    width: 400,
-    height: 300
+    width: '90%',
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    elevation: 2,
+    marginTop: 15
+  },
+  imageStyle: {
+    width: '100%',
+    minHeight: 200,
+    maxHeight: 300
+
   },
   bottomContainer: {
     flex: 3,
@@ -334,7 +367,8 @@ const styles = {
     fontFamily: GlobalStyles.fontFamily,
     //color: GlobalStyles.themeColor,
     //fontWeight: '600',
-    marginTop: 20
+    marginTop: 20,
+    fontWeight: '600'
   },
   horizontalContainer: {
     flexDirection: 'row',
@@ -369,12 +403,16 @@ const styles = {
   bottomPart: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%'
   },
   levelOverText: {
     fontSize: 25,
     fontFamily: GlobalStyles.fontFamily,
     textAlign: 'center'
+  },
+  altButton: {
+    margin: 5
   }
 }
 const mapStateToProps = (state) => {

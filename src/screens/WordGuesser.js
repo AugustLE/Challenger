@@ -43,7 +43,7 @@ class WordGuesser extends Component {
   componentDidMount() {
     //this.setState({ words: GameVars.words });
     ///this.startGameCountdown();
-    this.startLevelCountdown();
+    //this.startLevelCountdown();
   }
 
   startLevelCountdown() {
@@ -53,7 +53,7 @@ class WordGuesser extends Component {
     if (this.state.level_number > 0) {
       random_color = randomColor({ alpha: 0.3 });
     }
-    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color });
+    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color, game_running: true });
     this.getRandomWord();
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
   }
@@ -88,7 +88,8 @@ class WordGuesser extends Component {
         this.setState({
           game_over: true,
           lives: 3,
-          attempts: 3
+          attempts: 3,
+          game_running: false
         });
       } else {
         this.setState({ lives: lives - 1 });
@@ -160,20 +161,40 @@ class WordGuesser extends Component {
     }
   }
 
+  renderStartMenu(button_title) {
+    return (
+      <View>
+        <PrimaryButton style={{ marginTop: 20 }} onPress={this.startNew.bind(this)}>
+          {button_title}
+        </PrimaryButton>
+        <SecondaryButton
+          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'word' })}
+          style={{ marginTop: 10 }}>
+          Highscore
+        </SecondaryButton>
+        <SecondaryButton
+          onPress={() => this.props.navigation.goBack()}
+          style={{ marginTop: 10 }}>
+          Go back
+        </SecondaryButton>
+      </View>
+    );
+  }
+
   render() {
     if (this.state.game_over) {
       return (
         <View style={styles.container}>
           <Text style={[styles.levelOverText, { fontSize: 42 }]}>GAME OVER :(</Text>
           <Text style={[styles.levelOverText, { fontSize: 30, marginTop: 20 }]}>You got {this.state.user_points} points 🏅</Text>
-          <PrimaryButton style={{ marginTop: 20 }} onPress={this.startNew.bind(this)}>
-            Try again
-          </PrimaryButton>
-          <SecondaryButton
-            onPress={() => this.props.navigation.goBack()}
-            style={{ marginTop: 10 }}>
-            Go back
-          </SecondaryButton>
+          {this.renderStartMenu('Try again')}
+        </View>
+      );
+    }
+    if (!this.state.show_countdown && !this.state.game_running) {
+      return(
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          {this.renderStartMenu('Start Game!')}
         </View>
       );
     }

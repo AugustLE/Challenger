@@ -240,12 +240,6 @@ getImageByCity = (city)=>{
       );
     }
     return (
-      <KeyboardAvoidingView
-        style={{ width: '100%', flex: 1 }}
-        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-        behavior="padding"
-        enabled
-        >
       <View style={styles.container}>
         <View style={[styles.topContainer, { backgroundColor: this.state.levelColor }]}>
           <View style={styles.horizontalContainer}>
@@ -255,47 +249,47 @@ getImageByCity = (city)=>{
           <Text style={styles.levelText}>Level {this.state.roundNumber}</Text>
           <CountdownBar max_time={this.state.timePerLevel} time_left={this.state.timeLevelRemaining} />
         </View>
-        {this.state.imageURL!=null?
-          <Image
-            style={styles.imageContainer}
-            source={{
-              uri:
-                this.state.imageURL
-            }}
-          />
-        :
-      null}
+        <View style={styles.imageContainer}>
+          {this.state.imageURL!=null?
+              <Image
+                style={styles.imageStyle}
+                source={{
+                  uri:
+                    this.state.imageURL
+                }}
+                resizeMode='cover'
+              />
+            :
+          null}
+        </View>
 
         {!this.state.loading ? null:<View>Loading</View>}
-
-
-
         {this.state.started?
+
           <View>
-          <View>
-            <View style={{ flexDirection: "row" }}>
-            <PrimaryButton
-              style={styles.button}
-              onPress={() => this.submitAnswer(this.state.currentAlternatives[0])}>
-              {this.state.currentAlternatives[0]}
-            </PrimaryButton>
-            <PrimaryButton
-              style={styles.button}
-              onPress={() => this.submitAnswer(this.state.currentAlternatives[1])}>
-              {this.state.currentAlternatives[1]}
-            </PrimaryButton>
+            <View style={{ flexDirection: 'row' }}>
+              <PrimaryButton
+                style={styles.buttonStyle}
+                onPress={() => this.submitAnswer(this.state.currentAlternatives[0])}>
+                {this.state.currentAlternatives[0]}
+              </PrimaryButton>
+              <PrimaryButton
+                style={styles.buttonStyle}
+                onPress={() => this.submitAnswer(this.state.currentAlternatives[1])}>
+                {this.state.currentAlternatives[1]}
+              </PrimaryButton>
             </View>
-            <View style={{ flexDirection: "row" }}>
-            <PrimaryButton
-              style={styles.button}
-              onPress={() => this.submitAnswer(this.state.currentAlternatives[2])}>
-              {this.state.currentAlternatives[2]}
-            </PrimaryButton>
-            <PrimaryButton
-              style={styles.button}
-              onPress={() => this.submitAnswer(this.state.currentAlternatives[3])}>
-              {this.state.currentAlternatives[3]}
-            </PrimaryButton>
+            <View style={{ flexDirection: 'row' }}>
+              <PrimaryButton
+                style={styles.buttonStyle}
+                onPress={() => this.submitAnswer(this.state.currentAlternatives[2])}>
+                {this.state.currentAlternatives[2]}
+              </PrimaryButton>
+              <PrimaryButton
+                style={styles.buttonStyle}
+                onPress={() => this.submitAnswer(this.state.currentAlternatives[3])}>
+                {this.state.currentAlternatives[3]}
+              </PrimaryButton>
             </View>
             </View>
 
@@ -306,14 +300,11 @@ getImageByCity = (city)=>{
               />
               <Button onPress={() => this.newGame()} title="New Game" />
             </View>
-            </View>
+
           :
         <Button onPress={() => this.startGame()} title="Start Game" />}
-
-
-
       </View>
-      </KeyboardAvoidingView>
+
     );
   }
 }
@@ -337,9 +328,14 @@ const styles = {
     paddingTop: 30
   },
   imageContainer: {
-    borderWidth: 1,
-    width: 300,
-    height: 300
+    width: '90%',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    elevation: 2,
+
+  },
+  imageStyle: {
+    width: 200,
   },
   bottomContainer: {
     flex: 3,
@@ -387,6 +383,9 @@ const styles = {
     fontSize: 25,
     fontFamily: GlobalStyles.fontFamily,
     textAlign: 'center'
+  },
+  buttonStyle: {
+    margin: 5,
   }
 };
 

@@ -43,7 +43,7 @@ class MathBoxGame extends Component {
 
   componentDidMount() {
     console.log(Dimensions.get('window').width)
-    this.startCountdown();
+    //this.startCountdown();
   }
 
   startCountdown() {
@@ -305,7 +305,7 @@ class MathBoxGame extends Component {
   renderGameOverText() {
     if (this.state.game_over) {
       return (
-        <View>
+        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 40 }}>❌ Game over :(</Text>
           <Text style={{ fontFamily: GlobalStyles.fontFamily, fontSize: 20, marginTop: 20, marginBottom: 20 }}>You completed {this.state.level_count} levels!</Text>
         </View>
@@ -314,13 +314,22 @@ class MathBoxGame extends Component {
   }
 
   renderStartMenu() {
+    let button_text = 'Start Game!';
+    if (this.state.game_over) {
+      button_text = 'Try again';
+    }
     if (!this.state.game_running && !this.state.show_countdown) {
       return (
         <View style={styles.container}>
           {this.renderGameOverText()}
           <PrimaryButton onPress={this.startCountdown.bind(this)}>
-            Try again!
+            {button_text}
           </PrimaryButton>
+          <SecondaryButton
+            onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'math' })}
+            style={{ marginTop: 10 }}>
+            Highscore
+          </SecondaryButton>
           <SecondaryButton
             onPress={() => this.props.navigation.goBack()}
             style={{ marginTop: 10 }}>
