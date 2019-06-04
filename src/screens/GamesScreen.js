@@ -26,12 +26,6 @@ class GamesScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('AnimalGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
-            <Text style={styles.textStyle}>AnimalGuess</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
             onPress={() => this.props.navigation.navigate('MathBoxGame')}>
             <Image style={styles.imageStyle} source={require('../../assets/icons/calculator.png')} />
             <Text style={styles.textStyle}>MathGame</Text>
@@ -41,6 +35,18 @@ class GamesScreen extends React.Component {
             onPress={() => this.props.navigation.navigate('WordGuesser')}>
             <Image style={styles.imageStyle} source={require('../../assets/icons/board-game.png')} />
             <Text style={styles.textStyle}>WordGuess</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => this.props.navigation.navigate('ShortestGuesser')}>
+            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Text style={styles.textStyle}>ShortestGuess</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => this.props.navigation.navigate('AnimalGuesser')}>
+            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Text style={styles.textStyle}>AnimalGuess</Text>
           </TouchableOpacity>
         </View>
       </View>

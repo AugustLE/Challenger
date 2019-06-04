@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image,TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import timer from 'react-native-timer';
 import randomColor from 'randomcolor';
@@ -16,7 +16,7 @@ String.prototype.replaceAt=function(index, replacement) {
 }
 
 const gameConfig = {
-  time_lvl_easy: 10,
+  time_lvl_easy: 5,
   time_to_start: 3
 
 }
@@ -24,14 +24,12 @@ const gameConfig = {
 const initial_state = {
   lives: 3,
   attempts: 1,
-  game_time_remaining: 10,
+  game_time_remaining: 5,
   game_time_lvl: gameConfig.time_lvl_easy,
   game_running: false,
   game_over: false,
-  countries: GameVars.countries,
-  current_country: '',
+  current_shortest: '',
   current_alternatives: [],
-  image_URL: null,
   level_number: 0,
   time_to_start: gameConfig.time_to_start,
   show_countdown: false,
@@ -40,7 +38,7 @@ const initial_state = {
   levelColor: '#d1fffe'
 }
 
-class CountryGuesser extends Component {
+class ShortestGuesser extends Component {
 
   state = initial_state;
 
@@ -57,7 +55,7 @@ class CountryGuesser extends Component {
     if (this.state.level_number > 0) {
       random_color = randomColor({ alpha: 0.3 });
     }
-    this.setState({ show_countdown: true, game_time_remaining: 10, levelColor: random_color, game_running: true });
+    this.setState({ show_countdown: true, game_time_remaining: 5, levelColor: random_color, game_running: true });
     this.generateAlernatives();
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
   }
@@ -102,47 +100,31 @@ class CountryGuesser extends Component {
 
 
   generateAlernatives() {
-    const { countries } = this.state;
+    var min = 60;
+    var max = 110;
+    if (this.state.level_number>=40){
+      max = 70;
+    }
+    else{
+      max = max-this.state.level_number;
+    }
     var altArray = [];
-    while(altArray.length < 4){
-      var r = Math.floor(Math.random(0,countries.length)*100) + 1;
+    while(altArray.length < 5){
+      var r = Math.floor(Math.random()*(max-min+1)+min);
       if(altArray.indexOf(r) === -1) altArray.push(r);
     }
-    if (countries.length > 0) {
-      const country_index = altArray[Math.floor(Math.random() * altArray.length)];
-      const country = countries[country_index-1];
-      const new_countries = countries;
-      new_countries.splice(country_index, 1);
-      var alternatives = [countries[altArray[0]-1],countries[altArray[1]-1],countries[altArray[2]-1],countries[altArray[3]-1]];
-      this.setState({ countries: new_countries, current_country: country,current_alternatives:alternatives });
-      this.getImageByCountry(country);
-    }
+    console.log("altArray "+altArray);
+    const smallest = Math.min(...altArray);
+    const smallest_index = altArray.indexOf(smallest);
+    var alternatives = [altArray[0],altArray[1],altArray[2],altArray[3],altArray[4]];
+    this.setState({ current_shortest: smallest,current_alternatives:alternatives });
   }
 
-  getImageByCountry(country){
-    axios.get("https://images.search.yahoo.com/search/images;_ylt=Awr9DWsKEuZcYqMA"
-    +"PJaJzbkF;_ylu=X3oDMTBsZ29xY3ZzBHNlYwNzZWFyY2gEc2xrA2J1dHRvbg--;_ylc=X1MDOTYwNj"
-    +"I4NTcEX3IDMgRhY3RuA2NsawRjc3JjcHZpZAN0Y2lBbWpFd0xqSzM3ME5nWExRcTRBTU9Nall3TU"
-    +"FBQUFBQ1l4c3FfBGZyA3NmcARmcjIDc2EtZ3AEZ3ByaWQDQmswWklDN01UdmU1akJZQVRIaDRZQQ"
-    +"RuX3N1Z2cDMgRvcmlnaW4DaW1hZ2VzLnNlYXJjaC55YWhvby5jb20EcG9zAzAEcHFzdHIDBHBxc3R"
-    +"ybAMEcXN0cmwDMTYEcXVlcnkDbG9uZG9uJTIwZGF5dGltZQR0X3N0bXADMTU1ODU4MjAyNg--?p="
-    +country+"+flag&fr=sfp&fr2=sb-top-images.search&ei=UTF-8&n=60&x=wrt")
-    .then(res => {
-      var image = res.data;
-      //console.log(image);
-      var list = image.split("<img src=\'");
-      //console.log(list);
-      const image_URL = list[1].split("\'")[0];
-      this.setState({image_URL:image_URL});
-    }).catch(()=>{
-      console.log("Unable to find image");
-    });
-  }
 
 
   giveAnswer(answer) {
-    const { current_country, level_number, lives, attempts, user_points } = this.state;
-    if (answer === current_country) {
+    const { current_shortest, level_number, lives, attempts, user_points } = this.state;
+    if (answer === current_shortest) {
       this.setState({ attempts: 1, user_points: user_points + 1, gave_right_answer: true });
       this.startLevelCountdown();
     } else {
@@ -158,7 +140,7 @@ class CountryGuesser extends Component {
   }
 
   gameOver(){
-    this.props.updateHighscore('country',this.state.user_points)
+    this.props.updateHighscore('shortest',this.state.user_points)
     this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false, game_running: false });
 
   }
@@ -185,7 +167,7 @@ class CountryGuesser extends Component {
           {button_title}
         </PrimaryButton>
         <SecondaryButton
-          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'country' })}
+          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'shortest' })}
           style={{ marginTop: 10 }}>
           Highscore
         </SecondaryButton>
@@ -253,45 +235,30 @@ class CountryGuesser extends Component {
         </View>
         <View style={styles.bottomContainer}>
           <View style={[styles.bottomPart, { flex: 2 }]}>
-            <Text style={styles.subTitle}>Guess the flag:</Text>
-            <View style={styles.imageContainer}>
-              {this.state.image_URL!=null?
-                <Image
-                  resizeMode='contain'
-                  style={styles.imageStyle}
-                  source={{
-                    uri:
-                      this.state.image_URL
-                  }}
-                />
-                :
-              null}
-            </View>
-          </View>
-          <View style={[styles.bottomPart, { backgroundColor: '#f6f5f5', flex: 1 }]}>
+            <Text style={styles.subTitle}>Guess the shortest:</Text>
             <View style={{ flexDirection: "row" }}>
-            <SecondaryButton
-              style={styles.altButton}
+            <TouchableOpacity
+              style={[styles.lineBox,{width:this.state.current_alternatives[0], backgroundColor:this.state.levelColor}]}
               onPress={() => this.giveAnswer(this.state.current_alternatives[0])}>
-              {this.state.current_alternatives[0]}
-            </SecondaryButton>
-            <SecondaryButton
-              style={styles.altButton}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.lineBox,{width:this.state.current_alternatives[1], backgroundColor:this.state.levelColor}]}
               onPress={() => this.giveAnswer(this.state.current_alternatives[1])}>
-              {this.state.current_alternatives[1]}
-            </SecondaryButton>
+            </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row" }}>
-            <SecondaryButton
-              style={styles.altButton}
+            <TouchableOpacity
+              style={[styles.lineBox,{width:this.state.current_alternatives[2], backgroundColor:this.state.levelColor}]}
               onPress={() => this.giveAnswer(this.state.current_alternatives[2])}>
-              {this.state.current_alternatives[2]}
-            </SecondaryButton>
-            <SecondaryButton
-              style={styles.altButton}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.lineBox,{width:this.state.current_alternatives[3], backgroundColor:this.state.levelColor}]}
               onPress={() => this.giveAnswer(this.state.current_alternatives[3])}>
-              {this.state.current_alternatives[3]}
-            </SecondaryButton>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.lineBox,{width:this.state.current_alternatives[4], backgroundColor:this.state.levelColor}]}
+              onPress={() => this.giveAnswer(this.state.current_alternatives[4])}>
+            </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -318,27 +285,16 @@ const styles = {
     alignItems: 'center',
     paddingTop: 30
   },
-  imageContainer: {
-    width: '90%',
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    elevation: 2,
-    marginTop: 15
-  },
-  imageStyle: {
-    width: '100%',
-    minHeight: 200,
-    maxHeight: 300
-
-  },
   bottomContainer: {
     flex: 3,
     //backgroundColor: 'white',
     width: '100%',
     alignItems: 'center'
+  },
+  lineBox:{
+    backgroundColor: 'black',
+    height: 25,
+    margin: 25,
   },
   levelText: {
     fontSize: 30,
@@ -361,7 +317,7 @@ const styles = {
     fontFamily: GlobalStyles.fontFamily,
     //color: GlobalStyles.themeColor,
     //fontWeight: '600',
-    marginTop: 20,
+    marginTop: 30,
     fontWeight: '600'
   },
   horizontalContainer: {
@@ -414,4 +370,4 @@ const mapStateToProps = (state) => {
   return { highscores: highscores };
 };
 
-export default connect(mapStateToProps, { updateHighscore })(CountryGuesser);
+export default connect(mapStateToProps, { updateHighscore })(ShortestGuesser);

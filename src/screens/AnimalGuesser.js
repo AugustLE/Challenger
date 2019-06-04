@@ -16,7 +16,7 @@ String.prototype.replaceAt=function(index, replacement) {
 }
 
 const gameConfig = {
-  time_lvl_easy: 20,
+  time_lvl_easy: 10,
   time_to_start: 3
 
 }
@@ -24,7 +24,7 @@ const gameConfig = {
 const initial_state = {
   lives: 3,
   attempts: 1,
-  game_time_remaining: 20,
+  game_time_remaining: 10,
   game_time_lvl: gameConfig.time_lvl_easy,
   game_running: false,
   game_over: false,
@@ -57,7 +57,7 @@ class AnimalGuesser extends Component {
     if (this.state.level_number > 0) {
       random_color = randomColor({ alpha: 0.3 });
     }
-    this.setState({ show_countdown: true, game_time_remaining: 20, levelColor: random_color, game_running: true });
+    this.setState({ show_countdown: true, game_time_remaining: 10, levelColor: random_color, game_running: true });
     this.generateAlernatives();
     timer.setInterval('LevelCountdown', this.timeoutNextLevel.bind(this), 1000);
   }
@@ -116,8 +116,6 @@ class AnimalGuesser extends Component {
       var alternatives = [animals[altArray[0]-1],animals[altArray[1]-1],animals[altArray[2]-1],animals[altArray[3]-1]];
       this.setState({ animals: new_animals, current_animal: animal,current_alternatives:alternatives });
       this.getImageByAnimal(animal);
-      console.log(this.state.animals);
-      console.log(this.state.animals.length);
     }
   }
 
