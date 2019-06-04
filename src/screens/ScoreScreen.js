@@ -45,16 +45,6 @@ class ScoreScreen extends Component {
 
   }
 
-  /*
-  <ListItem
-    dateText={this.dateText(item)}
-    key={item.pk}
-    onPress={this.gotoApproved.bind(this, item)}
-    item={item}
-    style={{ backgroundColor: GlobalStyles.status_color_approved }}
-  />
-  */
-
   renderItem(item) {
     return (
 
