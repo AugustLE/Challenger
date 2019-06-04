@@ -5,18 +5,6 @@ import GlobalStyles from '../GlobalStyles';
 import {  getHighscores,getCurrentUserHigh } from '../actions';
 import { connect } from 'react-redux';
 
-const test_highscores = [
-  { user: 'test1@test.no', score: 30, pk: 1 },
-  { user: 'test2@test.no', score: 20, pk: 2 },
-  { user: 'test3@test.no', score: 15, pk: 3 },
-  { user: 'test4@test.no', score: 14, pk: 4 },
-  { user: 'test5@test.no', score: 10, pk: 5 },
-  { user: 'test6@test.no', score: 8, pk: 6 },
-  { user: 'test7@test.no', score: 7, pk: 7 },
-  { user: 'test8@test.no', score: 6, pk: 8 },
-  { user: 'test9@test.no', score: 5, pk: 9 },
-  { user: 'test10@test.no', score: 4, pk: 10 },
-]
 
 class ScoreScreen extends Component {
 

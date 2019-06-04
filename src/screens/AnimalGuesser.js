@@ -28,8 +28,8 @@ const initial_state = {
   game_time_lvl: gameConfig.time_lvl_easy,
   game_running: false,
   game_over: false,
-  countries: GameVars.countries,
-  current_country: '',
+  animals: GameVars.animals,
+  current_animal: '',
   current_alternatives: [],
   image_URL: null,
   level_number: 0,
@@ -40,7 +40,7 @@ const initial_state = {
   levelColor: '#d1fffe'
 }
 
-class CountryGuesser extends Component {
+class AnimalGuesser extends Component {
 
   state = initial_state;
 
@@ -102,33 +102,33 @@ class CountryGuesser extends Component {
 
 
   generateAlernatives() {
-    const { countries } = this.state;
+    const { animals } = this.state;
     var altArray = [];
     while(altArray.length < 4){
-      var r = Math.floor(Math.random(0,countries.length)*100) + 1;
+      var r = Math.floor(Math.random(0,animals.length)*100) + 1;
       if(altArray.indexOf(r) === -1) altArray.push(r);
     }
-    if (countries.length > 0) {
-      const country_index = altArray[Math.floor(Math.random() * altArray.length)];
-      const country = countries[country_index-1];
-      const new_countries = countries;
-      new_countries.splice(country_index, 1);
-      var alternatives = [countries[altArray[0]-1],countries[altArray[1]-1],countries[altArray[2]-1],countries[altArray[3]-1]];
-      this.setState({ countries: new_countries, current_country: country,current_alternatives:alternatives });
-      this.getImageByCountry(country);
-      console.log(this.state.countries);
-      console.log(this.state.countries.length);
+    if (animals.length > 0) {
+      const animal_index = altArray[Math.floor(Math.random() * altArray.length)];
+      const animal = animals[animal_index-1];
+      const new_animals = animals;
+      new_animals.splice(animal_index, 1);
+      var alternatives = [animals[altArray[0]-1],animals[altArray[1]-1],animals[altArray[2]-1],animals[altArray[3]-1]];
+      this.setState({ animals: new_animals, current_animal: animal,current_alternatives:alternatives });
+      this.getImageByAnimal(animal);
+      console.log(this.state.animals);
+      console.log(this.state.animals.length);
     }
   }
 
-  getImageByCountry(country){
+  getImageByAnimal(animal){
     axios.get("https://images.search.yahoo.com/search/images;_ylt=Awr9DWsKEuZcYqMA"
     +"PJaJzbkF;_ylu=X3oDMTBsZ29xY3ZzBHNlYwNzZWFyY2gEc2xrA2J1dHRvbg--;_ylc=X1MDOTYwNj"
     +"I4NTcEX3IDMgRhY3RuA2NsawRjc3JjcHZpZAN0Y2lBbWpFd0xqSzM3ME5nWExRcTRBTU9Nall3TU"
     +"FBQUFBQ1l4c3FfBGZyA3NmcARmcjIDc2EtZ3AEZ3ByaWQDQmswWklDN01UdmU1akJZQVRIaDRZQQ"
     +"RuX3N1Z2cDMgRvcmlnaW4DaW1hZ2VzLnNlYXJjaC55YWhvby5jb20EcG9zAzAEcHFzdHIDBHBxc3R"
     +"ybAMEcXN0cmwDMTYEcXVlcnkDbG9uZG9uJTIwZGF5dGltZQR0X3N0bXADMTU1ODU4MjAyNg--?p="
-    +country+"+flag&fr=sfp&fr2=sb-top-images.search&ei=UTF-8&n=60&x=wrt")
+    +animal+"+animal&fr=sfp&fr2=sb-top-images.search&ei=UTF-8&n=60&x=wrt")
     .then(res => {
       var image = res.data;
       //console.log(image);
@@ -143,8 +143,8 @@ class CountryGuesser extends Component {
 
 
   giveAnswer(answer) {
-    const { current_country, level_number, lives, attempts, user_points } = this.state;
-    if (answer === current_country) {
+    const { current_animal, level_number, lives, attempts, user_points } = this.state;
+    if (answer === current_animal) {
       this.setState({ attempts: 1, user_points: user_points + 1, gave_right_answer: true });
       this.startLevelCountdown();
     } else {
@@ -160,7 +160,7 @@ class CountryGuesser extends Component {
   }
 
   gameOver(){
-    this.props.updateHighscore('country',this.state.user_points)
+    this.props.updateHighscore('animal',this.state.user_points)
     this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false, game_running: false });
 
   }
@@ -187,7 +187,7 @@ class CountryGuesser extends Component {
           {button_title}
         </PrimaryButton>
         <SecondaryButton
-          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'country' })}
+          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'animal' })}
           style={{ marginTop: 10 }}>
           Highscore
         </SecondaryButton>
@@ -255,7 +255,7 @@ class CountryGuesser extends Component {
         </View>
         <View style={styles.bottomContainer}>
           <View style={[styles.bottomPart, { flex: 2 }]}>
-            <Text style={styles.subTitle}>Guess the flag:</Text>
+            <Text style={styles.subTitle}>Guess the animal:</Text>
             <View style={styles.imageContainer}>
               {this.state.image_URL!=null?
                 <Image
@@ -416,4 +416,4 @@ const mapStateToProps = (state) => {
   return { highscores: highscores };
 };
 
-export default connect(mapStateToProps, { updateHighscore })(CountryGuesser);
+export default connect(mapStateToProps, { updateHighscore })(AnimalGuesser);

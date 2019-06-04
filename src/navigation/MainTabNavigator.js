@@ -9,9 +9,10 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import GamesScreen from '../screens/GamesScreen';
 import MathBoxGame from '../screens/MathBoxGame';
-import CityGuesserScreen from '../screens/CountryGuesser';
+import CountryGuesser from '../screens/CountryGuesser';
 import WordGuesser from '../screens/WordGuesser';
 import ScoreScreen from '../screens/ScoreScreen';
+import AnimalGuesser from '../screens/AnimalGuesser';
 //import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -36,8 +37,9 @@ HomeStack.navigationOptions = {
 const GamesStack = createStackNavigator({
   Games: GamesScreen,
   MathBoxGame: MathBoxGame,
-  CityGuesser: CityGuesserScreen,
+  CountryGuesser: CountryGuesser,
   WordGuesser: WordGuesser,
+  AnimalGuesser: AnimalGuesser,
   ScoreScreen: ScoreScreen
 }, {
   headerMode: 'none'
