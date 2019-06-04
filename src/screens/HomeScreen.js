@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PrimaryButton } from '../components/common';
-import { setUserField, logoutUser } from '../actions';
+import { setUserField, logoutUser, getCurrentUser } from '../actions';
 import { connect } from 'react-redux';
 
 
@@ -10,14 +10,24 @@ class HomeScreen extends React.Component {
     title: '',
   };
 
+  state = {
+    current_user: '',
+  }
+
   handleLogout=()=>{
       this.props.logoutUser();
       this.props.navigation.navigate('Login');
   }
 
+  componentDidMount(){
+    let user = this.props.getCurrentUser();
+    this.setState({current_user:user});
+  }
+
   render() {
     return (
       <View style={styles.container}>
+      <Text style={styles.textStyle}> Logged in as: {this.state.current_user}</Text>
       <Text style={styles.textStyle}>HOME</Text>
       <PrimaryButton
         style={{ width: '90%', marginTop: 15, borderRadius: 2 }}
@@ -47,4 +57,4 @@ const mapStateToProps = (state) => {
   return {  };
 };
 
-export default connect(mapStateToProps, { setUserField, logoutUser })(HomeScreen);
+export default connect(mapStateToProps, { setUserField, logoutUser, getCurrentUser })(HomeScreen);

@@ -109,18 +109,16 @@ class CountryGuesser extends Component {
       var r = Math.floor(Math.random(0,countries.length)*100) + 1;
       if(altArray.indexOf(r) === -1) altArray.push(r);
     }
-    console.log("Array"+altArray);
     if (countries.length > 0) {
-      console.log('NEW COUNTRY');
       const country_index = altArray[Math.floor(Math.random() * altArray.length)];
-      console.log("Country_index"+country_index);
       const country = countries[country_index-1];
-      console.log("Current country: "+country);
       const new_countries = countries;
       new_countries.splice(country_index, 1);
       var alternatives = [countries[altArray[0]-1],countries[altArray[1]-1],countries[altArray[2]-1],countries[altArray[3]-1]];
       this.setState({ countries: new_countries, current_country: country,current_alternatives:alternatives });
       this.getImageByCountry(country);
+      console.log(this.state.countries);
+      console.log(this.state.countries.length);
     }
   }
 
@@ -138,7 +136,6 @@ class CountryGuesser extends Component {
       var list = image.split("<img src=\'");
       //console.log(list);
       const image_URL = list[1].split("\'")[0];
-      console.log("ImageURL of "+country+": "+image_URL);
       this.setState({image_URL:image_URL});
     }).catch(()=>{
       console.log("Unable to find image");
@@ -164,7 +161,7 @@ class CountryGuesser extends Component {
   }
 
   gameOver(){
-    this.props.updateHighscore('country_guesser',this.state.user_points)
+    this.props.updateHighscore('country',this.state.user_points)
     this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false, game_running: false });
 
   }

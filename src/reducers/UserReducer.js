@@ -1,12 +1,15 @@
 import {
   USER_SET_FIELD,
   USER_LOGOUT,
-  HIGHSCORES
+  HIGHSCORES,
+  USER_HIGHSCORE
 } from '../actions/types';
 
 const INITIAL_STATE = {
   user: null,
   loading: false,
+  highscores: [],
+  user_highscore: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -17,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
       return INITIAL_STATE;
     case HIGHSCORES:
       return {...state,highscores:action.payload};
+    case USER_HIGHSCORE:
+      return {...state,user_highscore:action.payload};
     default:
       return state;
   }

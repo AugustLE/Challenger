@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, StatusBar } from 'react-native';
-import { PrimaryButton, SecondaryButton } from '../components/common';
+import { PrimaryButton, SecondaryButton, Spinner } from '../components/common';
 import GlobalStyles from '../GlobalStyles';
+import {  getHighscores,getCurrentUserHigh } from '../actions';
+import { connect } from 'react-redux';
 
 const test_highscores = [
   { user: 'test1@test.no', score: 30, pk: 1 },
@@ -25,24 +27,24 @@ class ScoreScreen extends Component {
 
   state = {
     game_type: '',
-    highscores: test_highscores,
-    user_highscore: 0
+    highscores: [],
+    user_highscore: 0,
+    loading: false
   }
 
   componentDidMount() {
     const game_type = this.props.navigation.getParam('game_type', '');
-    this.setState({ game_type: game_type });
-    this.fetchHighscores(game_type);
-    this.fetchUserHighscroe(game_type);
-    console.log(game_type);
-  }
-
-  fetchHighscores(game_type) {
+    this.props.getCurrentUserHigh(game_type);
+    this.getHighscores(game_type);
 
   }
 
-  fetchUserHighscroe(game_type) {
 
+  getHighscores(game_type) {
+    this.setState({loading:true});
+    this.props.getHighscores(game_type).then(()=>{
+      this.setState({loading:false});
+    });
   }
 
   renderItem(item) {
@@ -61,7 +63,7 @@ class ScoreScreen extends Component {
     return (
       <View style={{ width: '100%', flex: 4, marginBottom: 10 }}>
         <FlatList
-          data={this.state.highscores}
+          data={this.props.highscores}
           renderItem={object => this.renderItem(object.item)}
           keyExtractor={item => item.pk.toString()}
           style={{ flex: 1, width: '100%' }}
@@ -73,11 +75,18 @@ class ScoreScreen extends Component {
   }
 
   render() {
+    if (this.state.loading){
+      return (
+        <View style={styles.container}>
+          <Spinner text="Loading highscores"/>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="black" barStyle="dark-content" />
         <View style={styles.topContainer}>
-          <Text style={styles.highscoreText}>Your highscore: {this.state.user_highscore}</Text>
+          <Text style={styles.highscoreText}>Your highscore: {this.props.user_highscore}</Text>
           <PrimaryButton
             style={{ position: 'absolute', width: 60, left: 10, top: 40 }}
             textStyle={{ fontSize: 20, margin: 0 }}
@@ -167,5 +176,9 @@ const styles = {
     textAlign: 'center'
   }
 }
+const mapStateToProps = (state) => {
+  const { highscores, user_highscore } = state.user;
+  return { highscores, user_highscore };
+};
 
-export default ScoreScreen;
+export default connect(mapStateToProps, { getHighscores, getCurrentUserHigh })(ScoreScreen);
