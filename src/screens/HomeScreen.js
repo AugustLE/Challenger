@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { PrimaryButton } from '../components/common';
 import { setUserField, logoutUser, getCurrentUser } from '../actions';
 import { connect } from 'react-redux';
-
+import GlobalStyles from '../GlobalStyles';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -27,13 +27,24 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-      <Text style={styles.textStyle}> Logged in as: {this.state.current_user}</Text>
-      <Text style={styles.textStyle}>HOME</Text>
-      <PrimaryButton
-        style={{ width: '90%', marginTop: 15, borderRadius: 2 }}
-        onPress={this.handleLogout.bind(this)}>
-        Logout
-      </PrimaryButton>
+        <View style={styles.topContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.imageStyle}
+              source={require('../../assets/icons/user_blue.png')}
+              resizeMode='contain'
+            />
+            <Text style={styles.textStyle}>{this.state.current_user}</Text>
+          </View>
+        </View>
+
+        <View style={styles.bottomContainer}>
+          <PrimaryButton
+            style={{ width: '90%', marginTop: 15, borderRadius: 2, marginTop: 20 }}
+            onPress={this.handleLogout.bind(this)}>
+            Logout
+          </PrimaryButton>
+        </View>
       </View>
     );
   }
@@ -46,8 +57,31 @@ const styles = {
     justifyContent: "center",
     alignItems: "center"
   },
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageStyle: {
+    width: 60,
+    height: 60
+  },
   textStyle: {
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: GlobalStyles.fontFamily,
+    fontWeight: '600',
+    color: GlobalStyles.themeColor,
+    marginLeft: 15
+  },
+  topContainer: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  bottomContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 };
 

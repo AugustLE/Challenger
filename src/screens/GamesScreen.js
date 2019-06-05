@@ -39,13 +39,13 @@ class GamesScreen extends React.Component {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => this.props.navigation.navigate('ShortestGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Image style={styles.imageStyle} source={require('../../assets/icons/lego.png')} />
             <Text style={styles.textStyle}>ShortestGuess</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => this.props.navigation.navigate('AnimalGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Image style={styles.imageStyle} source={require('../../assets/icons/animal.png')} />
             <Text style={styles.textStyle}>AnimalGuess</Text>
           </TouchableOpacity>
         </View>
