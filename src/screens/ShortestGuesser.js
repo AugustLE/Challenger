@@ -305,6 +305,9 @@ const styles = {
     height: 25,
     margin: 25,
     marginTop: 50,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    elevation: 2,
   },
   levelText: {
     fontSize: 30,
@@ -364,7 +367,7 @@ const styles = {
     marginTop:30,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '95%'
   },
   levelOverText: {
     fontSize: 25,
