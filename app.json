@@ -2,6 +2,7 @@
   "expo": {
     "name": "Challenger",
     "slug": "challenger",
+    "description": "This app is a collection of small funny games to challenge yourself! The application is built during the ECE251 project at UCSB Spring Quarter 2019",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
