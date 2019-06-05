@@ -77,7 +77,8 @@ class Login extends Component {
       <View style={styles.container}>
 
         <View style={styles.topNav}>
-          <Image style={styles.logoStyle} source={require('../../assets/images/robot-dev.png')} />
+          <Image style={styles.logoStyle} source={require('../../assets/icons/idea.png')} />
+          <Text style={styles.titleStyle}>Challenger</Text>
         </View>
 
         <View style={styles.midContainer}>
@@ -123,7 +124,7 @@ const styles = {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 40,
+    marginTop: 55,
     paddingBottom: 20,
 
 
@@ -165,6 +166,13 @@ const styles = {
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center'
+  },
+  titleStyle: {
+    fontSize: 35,
+    fontFamily: GlobalStyles.fontFamily,
+    fontWeight: '600',
+    marginTop: 15,
+    color: GlobalStyles.themeColor
   }
 };
 

@@ -27,6 +27,10 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image style={styles.logoStyle} source={require('../../assets/icons/idea.png')} />
+
+        </View>
         <View style={styles.topContainer}>
           <View style={styles.imageContainer}>
             <Image
@@ -63,8 +67,8 @@ const styles = {
     alignItems: 'center',
   },
   imageStyle: {
-    width: 60,
-    height: 60
+    width: 40,
+    height: 40
   },
   textStyle: {
     fontSize: 20,
@@ -82,6 +86,25 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  titleStyle: {
+    fontSize: 25,
+    fontFamily: GlobalStyles.fontFamily,
+    fontWeight: '600',
+    marginTop: 15,
+    color: GlobalStyles.themeColor
+  },
+  logoStyle: {
+    width: 90,
+    height: 90,
+  },
+  logoContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+    flex: 2,
+    backgroundColor: '#f5f5f5'
   }
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import { PrimaryButton } from '../components/common';
 import GlobalStyles from '../GlobalStyles';
 
@@ -17,44 +17,46 @@ class GamesScreen extends React.Component {
           <Text style={styles.titleStyle}>Games</Text>
         </View>
 
-        <View style={styles.menuContainer}>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('CountryGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
-            <Text style={styles.textStyle}>CountryGuess</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('MathBoxGame')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/calculator.png')} />
-            <Text style={styles.textStyle}>MathGame</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('WordGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/board-game.png')} />
-            <Text style={styles.textStyle}>WordGuess</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('ShortestGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/lego.png')} />
-            <Text style={styles.textStyle}>ShortestGuess</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('AnimalGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/animal.png')} />
-            <Text style={styles.textStyle}>AnimalGuess</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => this.props.navigation.navigate('PokemonGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/pokeball.png')} />
-            <Text style={styles.textStyle}>PokemonGuess</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView style={{ width: '100%' }}>
+          <View style={styles.menuContainer}>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('CountryGuesser')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+              <Text style={styles.textStyle}>CountryGuess</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('MathBoxGame')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/calculator.png')} />
+              <Text style={styles.textStyle}>MathGame</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('WordGuesser')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/board-game.png')} />
+              <Text style={styles.textStyle}>WordGuess</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('ShortestGuesser')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/lego.png')} />
+              <Text style={styles.textStyle}>ShortestGuess</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('AnimalGuesser')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/animal.png')} />
+              <Text style={styles.textStyle}>AnimalGuess</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() => this.props.navigation.navigate('PokemonGuesser')}>
+              <Image style={styles.imageStyle} source={require('../../assets/icons/pokeball.png')} />
+              <Text style={styles.textStyle}>PokemonGuess</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
 
     );
@@ -76,7 +78,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    flex: 4,
+    marginTop: 30
   },
   imageButton: {
     width: 150,
@@ -106,7 +108,7 @@ const styles = {
     fontWeight: '600'
   },
   topContainer: {
-    flex: 1,
+    height: 130,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: GlobalStyles.themeColor,

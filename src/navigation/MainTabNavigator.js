@@ -19,6 +19,8 @@ import PokemonGuesser from '../screens/PokemonGuesser';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen
+}, {
+  headerMode: 'none'
 });
 
 HomeStack.navigationOptions = {
