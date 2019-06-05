@@ -28,8 +28,8 @@ const initial_state = {
   game_time_lvl: gameConfig.time_lvl_easy,
   game_running: false,
   game_over: false,
-  countries: GameVars.countries,
-  current_country: '',
+  pokemons: GameVars.pokemons,
+  current_pokemon: '',
   current_alternatives: [],
   image_URL: null,
   level_number: 0,
@@ -40,7 +40,7 @@ const initial_state = {
   levelColor: '#d1fffe'
 }
 
-class CountryGuesser extends Component {
+class PokemonGuesser extends Component {
 
   state = initial_state;
 
@@ -102,34 +102,31 @@ class CountryGuesser extends Component {
 
 
   generateAlernatives() {
-    const { countries } = this.state;
+    const { pokemons } = this.state;
     var altArray = [];
     while(altArray.length < 4){
-      var r = Math.floor(Math.random(0,countries.length)*100) + 1;
+      var r = Math.floor(Math.random(0,pokemons.length)*100) + 1;
       if(altArray.indexOf(r) === -1) altArray.push(r);
     }
-    if (countries.length > 0) {
-      const country_index = altArray[Math.floor(Math.random() * altArray.length)]-1;
-      const country = countries[country_index];
-      console.log(country_index);
-      console.log(country);
-      const new_countries = countries;
-      new_countries.splice(country_index, 1);
-      var alternatives = [countries[altArray[0]-1],countries[altArray[1]-1],countries[altArray[2]-1],countries[altArray[3]-1]];
-      this.setState({ countries: new_countries, current_country: country,current_alternatives:alternatives });
-      this.getImageByCountry(country);
-      console.log(new_countries);
+    if (pokemons.length > 0) {
+      const pokemon_index = altArray[Math.floor(Math.random() * altArray.length)]-1;
+      const pokemon = pokemons[pokemon_index];
+      var alternatives = [pokemons[altArray[0]-1],pokemons[altArray[1]-1],pokemons[altArray[2]-1],pokemons[altArray[3]-1]];
+      const new_pokemons = pokemons;
+      new_pokemons.splice(pokemon_index, 1);
+      this.setState({ pokemons: new_pokemons, current_pokemon: pokemon,current_alternatives:alternatives });
+      this.getImageByPokemon(pokemon);
     }
   }
 
-  getImageByCountry(country){
+  getImageByPokemon(pokemon){
     axios.get("https://images.search.yahoo.com/search/images;_ylt=Awr9DWsKEuZcYqMA"
     +"PJaJzbkF;_ylu=X3oDMTBsZ29xY3ZzBHNlYwNzZWFyY2gEc2xrA2J1dHRvbg--;_ylc=X1MDOTYwNj"
     +"I4NTcEX3IDMgRhY3RuA2NsawRjc3JjcHZpZAN0Y2lBbWpFd0xqSzM3ME5nWExRcTRBTU9Nall3TU"
     +"FBQUFBQ1l4c3FfBGZyA3NmcARmcjIDc2EtZ3AEZ3ByaWQDQmswWklDN01UdmU1akJZQVRIaDRZQQ"
     +"RuX3N1Z2cDMgRvcmlnaW4DaW1hZ2VzLnNlYXJjaC55YWhvby5jb20EcG9zAzAEcHFzdHIDBHBxc3R"
     +"ybAMEcXN0cmwDMTYEcXVlcnkDbG9uZG9uJTIwZGF5dGltZQR0X3N0bXADMTU1ODU4MjAyNg--?p="
-    +country+"+flag&fr=sfp&fr2=sb-top-images.search&ei=UTF-8&n=60&x=wrt")
+    +pokemon+"+pokemon&fr=sfp&fr2=sb-top-images.search&ei=UTF-8&n=60&x=wrt")
     .then(res => {
       var image = res.data;
       //console.log(image);
@@ -144,8 +141,8 @@ class CountryGuesser extends Component {
 
 
   giveAnswer(answer) {
-    const { current_country, level_number, lives, attempts, user_points } = this.state;
-    if (answer === current_country) {
+    const { current_pokemon, level_number, lives, attempts, user_points } = this.state;
+    if (answer === current_pokemon) {
       this.setState({ attempts: 1, user_points: user_points + 1, gave_right_answer: true });
       this.startLevelCountdown();
     } else {
@@ -161,7 +158,7 @@ class CountryGuesser extends Component {
   }
 
   gameOver(){
-    this.props.updateHighscore('country',this.state.user_points)
+    this.props.updateHighscore('pokemon',this.state.user_points)
     this.setState({ game_over: true, lives: 3, attempts: 1, gave_right_answer: false, game_running: false });
 
   }
@@ -188,7 +185,7 @@ class CountryGuesser extends Component {
           {button_title}
         </PrimaryButton>
         <SecondaryButton
-          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'country' })}
+          onPress={() => this.props.navigation.navigate('ScoreScreen', { game_type: 'pokemon' })}
           style={{ marginTop: 10 }}>
           Highscore
         </SecondaryButton>
@@ -256,7 +253,7 @@ class CountryGuesser extends Component {
         </View>
         <View style={styles.bottomContainer}>
           <View style={[styles.bottomPart, { flex: 2 }]}>
-            <Text style={styles.subTitle}>Guess the flag:</Text>
+            <Text style={styles.subTitle}>Guess the pokemon:</Text>
             <View style={styles.imageContainer}>
               {this.state.image_URL!=null?
                 <Image
@@ -417,4 +414,4 @@ const mapStateToProps = (state) => {
   return { highscores: highscores };
 };
 
-export default connect(mapStateToProps, { updateHighscore })(CountryGuesser);
+export default connect(mapStateToProps, { updateHighscore })(PokemonGuesser);

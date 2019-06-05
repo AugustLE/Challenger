@@ -48,6 +48,12 @@ class GamesScreen extends React.Component {
             <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
             <Text style={styles.textStyle}>AnimalGuess</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => this.props.navigation.navigate('PokemonGuesser')}>
+            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Text style={styles.textStyle}>PokemonGuess</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

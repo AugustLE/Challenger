@@ -109,8 +109,8 @@ class AnimalGuesser extends Component {
       if(altArray.indexOf(r) === -1) altArray.push(r);
     }
     if (animals.length > 0) {
-      const animal_index = altArray[Math.floor(Math.random() * altArray.length)];
-      const animal = animals[animal_index-1];
+      const animal_index = altArray[Math.floor(Math.random() * altArray.length)]-1;
+      const animal = animals[animal_index];
       const new_animals = animals;
       new_animals.splice(animal_index, 1);
       var alternatives = [animals[altArray[0]-1],animals[altArray[1]-1],animals[altArray[2]-1],animals[altArray[3]-1]];

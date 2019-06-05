@@ -14,6 +14,7 @@ import WordGuesser from '../screens/WordGuesser';
 import ScoreScreen from '../screens/ScoreScreen';
 import AnimalGuesser from '../screens/AnimalGuesser';
 import ShortestGuesser from '../screens/ShortestGuesser';
+import PokemonGuesser from '../screens/PokemonGuesser';
 //import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -42,6 +43,7 @@ const GamesStack = createStackNavigator({
   WordGuesser: WordGuesser,
   AnimalGuesser: AnimalGuesser,
   ShortestGuesser: ShortestGuesser,
+  PokemonGuesser: PokemonGuesser,
   ScoreScreen: ScoreScreen
 }, {
   headerMode: 'none'
