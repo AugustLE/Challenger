@@ -6,6 +6,8 @@ import GameVars from '../constants/GameVars';
 import GlobalStyles from '../GlobalStyles';
 import CountdownBar from '../components/CountdownBar';
 import { Input, PrimaryButton, SecondaryButton, ErrorText } from '../components/common';
+import {  updateHighscore } from '../actions';
+import { connect } from 'react-redux';
 
 
 String.prototype.replaceAt=function(index, replacement) {
@@ -85,6 +87,7 @@ class WordGuesser extends Component {
       const { lives, attempts } = this.state;
 
       if (lives === 1) {
+        this.props.updateHighscore('word',this.state.user_points)
         this.setState({
           game_over: true,
           lives: 3,
@@ -138,6 +141,7 @@ class WordGuesser extends Component {
       let new_attempts = attempts - 1;
       this.setState({ attempts: new_attempts });
       if (lives === 1 && new_attempts === 0) {
+        this.props.updateHighscore('word',this.state.user_points)
         this.setState({ game_over: true, lives: 3, attempts: 3, gave_right_answer: false });
       } else if (lives > 1 && new_attempts === 0) {
         this.setState({ lives: lives - 1, attempts: 3, gave_right_answer: false });
@@ -361,5 +365,8 @@ const styles = {
     textAlign: 'center'
   }
 }
+const mapStateToProps = (state) => {
+  return state;
+};
 
-export default WordGuesser;
+export default connect(mapStateToProps, { updateHighscore })(WordGuesser);

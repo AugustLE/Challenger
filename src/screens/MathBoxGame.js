@@ -5,6 +5,8 @@ import randomColor from 'randomcolor';
 import { PrimaryButton, SecondaryButton } from '../components/common';
 import GlobalStyles from '../GlobalStyles';
 import CountdownBar from '../components/CountdownBar';
+import {  updateHighscore } from '../actions';
+import { connect } from 'react-redux';
 
 const gameConfig = {
   time_lvl_easy: 20,
@@ -99,6 +101,7 @@ class MathBoxGame extends Component {
     this.setState({ game_time_remaining: this.state.game_time_remaining - 1 });
     if (this.state.game_time_remaining === 0) {
       timer.clearInterval('GameCountdown');
+      this.props.updateHighscore('math',this.state.level_count)
       this.setState({ game_over: true, game_running: false });
     }
   }
@@ -246,11 +249,11 @@ class MathBoxGame extends Component {
         this.setState({ level_won: true, box_params: new_box_params });
         this.startLevelCountdown();
       } else {
+        this.props.updateHighscore('math',this.state.level_count)
         this.setState({ game_over: true, game_running: false, box_params: new_box_params });
       }
     }
   }
-
 
   renderGameBox(obj) {
     let color = '#acacac'
@@ -448,4 +451,8 @@ const styles = {
   }
 };
 
-export default MathBoxGame;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps, { updateHighscore })(MathBoxGame);
