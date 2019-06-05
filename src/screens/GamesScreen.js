@@ -51,7 +51,7 @@ class GamesScreen extends React.Component {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => this.props.navigation.navigate('PokemonGuesser')}>
-            <Image style={styles.imageStyle} source={require('../../assets/icons/skyline.png')} />
+            <Image style={styles.imageStyle} source={require('../../assets/icons/pokeball.png')} />
             <Text style={styles.textStyle}>PokemonGuess</Text>
           </TouchableOpacity>
         </View>
